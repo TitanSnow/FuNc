@@ -1,0 +1,13 @@
+<!doctype html>
+<textarea cols="80" rows="50" id="ta"></textarea>
+<button type="button" id="btn">run</button>
+<script src="func.js"></script>
+<script>
+onload=function(){
+	var ta=document.getElementById("ta")
+	var btn=document.getElementById("btn")
+	btn.onclick=function(){
+		console.log(func(ta.value,a))
+	}
+}
+</script>
