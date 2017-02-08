@@ -1,3 +1,4 @@
+"use strict"
 var evil=require("./FuNc-evil.js").evil
 var a={rt:require("./FuNc-rt.js")}
 var rl=require("readline").createInterface({
