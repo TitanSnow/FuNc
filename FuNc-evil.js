@@ -1,7 +1,9 @@
 "use strict"
 var v,a
 var df=/\s*([\w\$]+|[^\s\w\$]+)/g
-class EOF{}
+class EvilError{}
+class EOF extends EvilError{}
+class SyntaxError extends EvilError{}
 function setv(pv){
 	v=pv
 	df.lastIndex=0
@@ -16,9 +18,12 @@ function geta(){
 	return a
 }
 function nxttok(){
+	var li=df.lastIndex
 	var rst=df.exec(v)
 	if(rst===null)
 		throw new EOF()
+	if(rst.index!=li)
+		throw new SyntaxError()
 	return rst[1]
 }
 var get_lookup=function(obj){
@@ -50,6 +55,12 @@ function evil(pv,pa){
 	return rv
 }
 module.exports=new class{
+	get EvilError(){
+		return EvilError
+	}
+	get SyntaxError(){
+		return SyntaxError
+	}
 	get EOF(){
 		return EOF
 	}
