@@ -77,7 +77,7 @@ function nxtfun(){
 	var tok,fun,len,arg,ifo,nv,rv,_,__
 	if(!stack.length){
 		tok=nxttok()				// get token
-		ifo=get_lookup(a)(a,tok)	// get the obj info
+		ifo=get_lookup(a)(module.exports,tok)	// get the obj info
 		fun=ifo.func
 		len=ifo.len
 		arg=[]

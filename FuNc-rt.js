@@ -1,6 +1,7 @@
 "use strict"
 module.exports={
-	lookup:function(a,name){
+	lookup:function(exp,name){
+		var a=exp.a
 		var inthings={
 			print:function(x){
 				return console.log(x),null
@@ -10,6 +11,38 @@ module.exports={
 			},
 			"=":function(x){
 				return a[a.__]=x
+			},
+			"[":function(){
+				var cnt=1
+				var v=exp.v
+				var df=exp.df
+				var i
+				var cont=true
+				for(i=df.lastIndex;cont&&i<v.length;++i)
+					switch(v[i]){
+						case '[':
+							++cnt
+							break
+						case ']':
+							if(--cnt==0) cont=false
+							break
+						default:
+							break
+					}
+				if(cont){--df.lastIndext;throw new exp.NF()}	// TODO doesn't work, fix it
+				var fst=df.lastIndex
+				df.lastIndex=i
+				var estr=v.substring(fst,i-1)
+				return (function(native_code){
+					return function(){ return native_code() }
+				})(function(){
+					var v=exp.v
+					var li=exp.df.lastIndex
+					var rv=exp.evil(estr,exp.a)
+					exp.v=v
+					exp.df.lastIndex=li
+					return rv
+				})
 			}
 		}
 
