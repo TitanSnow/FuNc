@@ -7,6 +7,9 @@ module.exports={
 			},
 			exit:function(x){
 				return process.exit(x),null
+			},
+			"=":function(x){
+				return a[a.__]=x
 			}
 		}
 

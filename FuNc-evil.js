@@ -74,13 +74,15 @@ var get_lookup=function(obj){
 var stack=[]
 // evaluation
 function nxtfun(){
-	var tok,fun,len,arg,ifo,nv,rv
+	var tok,fun,len,arg,ifo,nv,rv,_,__
 	if(!stack.length){
 		tok=nxttok()				// get token
 		ifo=get_lookup(a)(a,tok)	// get the obj info
 		fun=ifo.func
 		len=ifo.len
 		arg=[]
+		_=a._
+		__=a.__
 	}else{
 		let rec=stack.pop()
 		// recov
@@ -91,6 +93,8 @@ function nxtfun(){
 		ifo=rec.ifo
 		nv=rec.nv
 		rv=rec.rv
+		_=rec._
+		__=rec.__
 		++len						// inc len, re-go-into loop
 	}
 	while(len--){
@@ -106,6 +110,8 @@ function nxtfun(){
 		arg.push(rv)			// make a arg list
 	}
 	// call and return
+	a._=_
+	a.__=__
 	rv=fun.apply(null,arg)
 	a._=rv						// store the last return val
 	a.__=tok					// store the last token
@@ -114,7 +120,7 @@ function nxtfun(){
 	// store this env to stack
 	function pushStack(){
 		stack.push({
-			tok,fun,len,arg,ifo,nv,rv		// ES6
+			tok,fun,len,arg,ifo,nv,rv,_,__		// ES6
 		})
 	}
 }
