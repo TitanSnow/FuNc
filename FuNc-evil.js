@@ -21,10 +21,20 @@ var df=/\s*([\w\$]+|[^\s\w\$]+)/g
 // EOF for end of file(string)
 // SyntaxError for its name
 // (maybe there won't be a syntax error because there's no syntax?)
+// NF for not finished "v"
 // TODO add a constructor to store error message
-class EvilError{}
-class EOF extends EvilError{}
-class SyntaxError extends EvilError{}
+class EvilError{
+	toString(){return "[error EvilError]"}
+}
+class EOF extends EvilError{
+	toString(){return "[error EOF]"}
+}
+class SyntaxError extends EvilError{
+	toString(){return "[error SyntaxError]"}
+}
+class NF extends EvilError{
+	toString(){return "[error NF]"}
+}
 
 // operation to v
 function setv(pv){
@@ -60,22 +70,53 @@ var get_lookup=function(obj){
 	return obj.rt.lookup
 }
 
+// store stack
+var stack=[]
 // evaluation
 function nxtfun(){
-	var tok,fun,len,arg,ifo
-	tok=nxttok()				// get token
-	ifo=get_lookup(a)(a,tok)	// get the obj info
-	fun=ifo.func
-	len=ifo.len
-	arg=[]
-	while(len--)
-		arg.push(nxtfun())		// make a arg list
+	var tok,fun,len,arg,ifo,nv,rv
+	if(!stack.length){
+		tok=nxttok()				// get token
+		ifo=get_lookup(a)(a,tok)	// get the obj info
+		fun=ifo.func
+		len=ifo.len
+		arg=[]
+	}else{
+		let rec=stack.pop()
+		// recov
+		tok=rec.tok
+		fun=rec.fun
+		len=rec.len
+		arg=rec.arg
+		ifo=rec.ifo
+		nv=rec.nv
+		rv=rec.rv
+		++len						// inc len, re-go-into loop
+	}
+	while(len--){
+		try{
+			rv=nxtfun()
+		}catch(err){
+			if(err instanceof EOF||err instanceof NF){	// if this step meet error, need to store stack
+				pushStack()
+				throw new NF()
+			}
+			throw err
+		}
+		arg.push(rv)			// make a arg list
+	}
 	// call and return
-	var rv=fun.apply(null,arg)
+	rv=fun.apply(null,arg)
 	a._=rv						// store the last return val
 	a.__=tok					// store the last token
 	return rv
-	// TODO store the stack when EOF to let users call next with other code part
+
+	// store this env to stack
+	function pushStack(){
+		stack.push({
+			tok,fun,len,arg,ifo,nv,rv		// ES6
+		})
+	}
 }
 
 // interface
@@ -104,6 +145,9 @@ module.exports=new class{
 	}
 	get EOF(){
 		return EOF
+	}
+	get NF(){
+		return NF
 	}
 	get df(){
 		return df
@@ -137,5 +181,8 @@ module.exports=new class{
 	}
 	get evil(){
 		return evil
+	}
+	get stack(){
+		return stack
 	}
 }
