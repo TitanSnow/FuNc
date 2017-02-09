@@ -70,7 +70,11 @@ function nxtfun(){
 	arg=[]
 	while(len--)
 		arg.push(nxtfun())		// make a arg list
-	return fun.apply(null,arg)	// call and return
+	// call and return
+	var rv=fun.apply(null,arg)
+	a._=rv						// store the last return val
+	a.__=tok					// store the last token
+	return rv
 	// TODO store the stack when EOF to let users call next with other code part
 }
 
