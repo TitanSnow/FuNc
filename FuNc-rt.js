@@ -66,6 +66,15 @@ module.exports={
 			},
 			"null":function(){
 				return null
+			},
+			"~":function(){
+				a.__=exp.nxttok()
+				a._=(function(native_code){
+					return function(){ return native_code() }
+				})((function(val){
+					return function(){ return val }
+				})(exp.get_lookup(a)(exp,a.__).func))
+				throw new exp.preventLastValue();
 			}
 		}
 
@@ -88,17 +97,11 @@ module.exports={
 			if(!inthings.hasOwnProperty(name)){
 				let n
 				if(isNaN(n=Number(name)))
-					return ret(function(){
-						return name
-					})
+					return ret(function(){ return name })
 				else
-					return ret(function(){
-						return n
-					})
+					return ret(function(){ return n })
 			}else
 				return ret(inthings[name])
-		}else return ret(function(){
-			return rst
-		})
+		}else return ret(function(){ return rst })
 	}
 }

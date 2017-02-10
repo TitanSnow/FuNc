@@ -35,6 +35,9 @@ class SyntaxError extends EvilError{
 class NF extends EvilError{
 	toString(){return "[error NF]"}
 }
+class preventLastValue extends EvilError{
+	toString(){return "[error preventLastValue]"}
+}
 
 // operation to v
 function setv(pv){
@@ -115,6 +118,8 @@ function nxtfun(){
 	try{rv=fun.apply(null,arg)}catch(err){
 		if(err instanceof NF)	// catch NF thrown by function
 			pushStack()
+		else if(err instanceof preventLastValue)
+			return null
 		throw err
 	}
 	a._=rv						// store the last return val
@@ -158,6 +163,9 @@ module.exports=new class{
 	}
 	get NF(){
 		return NF
+	}
+	get preventLastValue(){
+		return preventLastValue
 	}
 	get df(){
 		return df
