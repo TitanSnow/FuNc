@@ -43,6 +43,29 @@ module.exports={
 					exp.df.lastIndex=li
 					return rv
 				})
+			},
+			str:function(x){
+				return x.toString()
+			},
+			"float":function(x,y){
+				return Number(x+"."+y)
+			},
+			number:function(x){
+				return Number(x)
+			},
+			"int":function(x){
+				if(typeof(x)=="number")
+					return Math.floor(x)
+				return parseInt(x)
+			},
+			isNaN:function(x){
+				return isNaN(x)
+			},
+			"typeof":function(x){
+				return typeof x
+			},
+			"null":function(){
+				return null
 			}
 		}
 
