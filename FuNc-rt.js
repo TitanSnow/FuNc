@@ -18,13 +18,21 @@ module.exports={
 				var df=exp.df
 				var i
 				var cont=true
-				for(i=df.lastIndex;cont&&i<v.length;++i)
+				var inq=false
+				var non=0
+				for(i=df.lastIndex;cont&&i<v.length;++i,--non)
 					switch(v[i]){
 						case '[':
-							++cnt
+							if(!inq)++cnt
 							break
 						case ']':
-							if(--cnt==0) cont=false
+							if(!inq&&--cnt==0) cont=false
+							break
+						case "'":
+							if(non<=0)inq=!inq
+							break
+						case "\\":
+							if(inq)non=2
 							break
 						default:
 							break
@@ -74,10 +82,37 @@ module.exports={
 				})((function(val){
 					return function(){ return val }
 				})(exp.get_lookup(a)(exp,a.__).func))
-				throw new exp.preventLastValue(a.__);
+				throw new exp.preventLastValue(a.__)
 			},
 			"eval":function(x){
 				return Function("a","x","with(a)return eval(x)")(a,x)
+			},
+			"'":function(){
+				debugger
+				var v=exp.v
+				var df=exp.df
+				var i
+				var cont=true
+				var non=0
+				for(i=df.lastIndex;cont&&i<v.length;++i,--non)
+					switch(v[i]){
+						case "\\":
+							non=2
+							break
+						case "'":
+							if(non<=0)
+								cont=false
+							break
+						default:
+							break
+					}
+				if(cont) throw new exp.NF()
+				var li=df.lastIndex
+				df.lastIndex=i
+				return eval("'"+v.substring(li,i-1).replace(/\r\n|\r|\n/g,"\\n")+"'")
+			},
+			len:function(x){
+				return x.length
 			}
 		}
 
