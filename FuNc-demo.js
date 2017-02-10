@@ -20,7 +20,21 @@ if(process.argv.length<=2){
 		rl.question("> ",cb)
 	})
 }else{
+	var fs=require("fs")
 	var filename=process.argv[2]
-	var v=require("fs").readFileSync(filename,{encoding:"UTF-8"})
+	var raw_v=fs.readFileSync(filename)
+	var v=raw_v.toString("binary")
+	var coding_rex=/^.*(?:\r\n|\r|\n)?.*coding[ \t]*[:=][ \t]*(\S+)/
+	var rst=coding_rex.exec(v)
+	var coding
+	if(rst!==null) coding=rst[1]
+	else{
+		v=raw_v.toString("ucs2")
+		rst=coding_rex.exec(v)
+		if(rst!==null) coding=rst[1]
+	}
+	if(typeof(coding)=="undefined")
+		coding="utf8"
+	v=raw_v.toString(coding)
 	evil(v,a)
 }
