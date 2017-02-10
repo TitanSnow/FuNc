@@ -113,6 +113,9 @@ module.exports={
 			},
 			len:function(x){
 				return x.length
+			},
+			trim:function(x){
+				return x.trim()
 			}
 		}
 
