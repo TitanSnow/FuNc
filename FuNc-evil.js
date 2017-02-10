@@ -36,6 +36,7 @@ class NF extends EvilError{
 	toString(){return "[error NF]"}
 }
 class preventLastValue extends EvilError{
+	constructor(val){super();this.returnValue=val}
 	toString(){return "[error preventLastValue]"}
 }
 
@@ -119,7 +120,7 @@ function nxtfun(){
 		if(err instanceof NF)	// catch NF thrown by function
 			pushStack()
 		else if(err instanceof preventLastValue)
-			return null
+			return err.returnValue
 		throw err
 	}
 	a._=rv						// store the last return val
