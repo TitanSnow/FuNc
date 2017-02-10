@@ -75,6 +75,9 @@ module.exports={
 					return function(){ return val }
 				})(exp.get_lookup(a)(exp,a.__).func))
 				throw new exp.preventLastValue(a.__);
+			},
+			"eval":function(x){
+				return Function("a","x","with(a)return eval(x)")(a,x)
 			}
 		}
 
