@@ -10,7 +10,7 @@ rl.question("> ",function cb(v){
 	try{
 		var r=evil(v,a)
 	}catch(err){
-		if(!err instanceof ev.NF)
+		if(!(err instanceof ev.NF))
 			throw err
 		rl.question(". ",cb)
 		return
