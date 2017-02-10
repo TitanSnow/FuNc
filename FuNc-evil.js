@@ -103,16 +103,20 @@ function nxtfun(){
 		}catch(err){
 			if(err instanceof EOF||err instanceof NF){	// if this step meet error, need to store stack
 				pushStack()
-				throw new NF()
+				if(err instanceof EOF)throw new NF()	// do not new a error if NF but need to replace EOF
 			}
 			throw err
 		}
 		arg.push(rv)			// make a arg list
 	}
 	// call and return
-	a._=_
+	a._=_						// _&__ always be left
 	a.__=__
-	rv=fun.apply(null,arg)
+	try{rv=fun.apply(null,arg)}catch(err){
+		if(err instanceof NF)	// catch NF thrown by function
+			pushStack()
+		throw err
+	}
 	a._=rv						// store the last return val
 	a.__=tok					// store the last token
 	return rv

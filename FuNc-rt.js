@@ -29,7 +29,7 @@ module.exports={
 						default:
 							break
 					}
-				if(cont){--df.lastIndext;throw new exp.NF()}	// TODO doesn't work, fix it
+				if(cont)throw new exp.NF()
 				var fst=df.lastIndex
 				df.lastIndex=i
 				var estr=v.substring(fst,i-1)
