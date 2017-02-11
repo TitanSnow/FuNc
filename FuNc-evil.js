@@ -103,6 +103,8 @@ function nxtfun(){
 	}
 	while(len--){
 		try{
+			a._=_						// _&__ always be left
+			a.__=__
 			rv=nxtfun()
 		}catch(err){
 			if(err instanceof EOF||err instanceof NF){	// if this step meet error, need to store stack

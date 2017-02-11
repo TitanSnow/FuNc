@@ -115,6 +115,27 @@ module.exports={
 			},
 			"==":function(x){
 				return a._==x
+			},
+			"+":function(x){
+				return a._+x
+			},
+			"-":function(x){
+				return a._-x
+			},
+			"*":function(x){
+				return a._*x
+			},
+			"/":function(x){
+				return a._/x
+			},
+			"//":function(x){
+				return Math.floor(a._/x)
+			},
+			"set":function(x,y){
+				return a[x]=y
+			},
+			"`":function(){
+				return exp.nxttok()
 			}
 		}
 
