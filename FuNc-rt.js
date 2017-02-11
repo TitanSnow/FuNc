@@ -80,9 +80,9 @@ module.exports={
 				a._=(function(native_code){
 					return function(){ return native_code() }
 				})((function(val){
-					return function(){ return val }
+					return val
 				})(exp.get_lookup(a)(exp,a.__).func))
-				throw new exp.preventLastValue(a.__)
+				throw new exp.preventLastValue(a._)
 			},
 			"eval":function(x){
 				return Function("a","x","with(a)return eval(x)")(a,x)
