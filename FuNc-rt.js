@@ -77,11 +77,7 @@ module.exports={
 			},
 			"~":function(){
 				a.__=exp.nxttok()
-				a._=(function(native_code){
-					return function(){ return native_code() }
-				})((function(val){
-					return val
-				})(exp.get_lookup(a)(exp,a.__).func))
+				a._=exp.get_lookup(a)(exp,a.__).func
 				throw new exp.preventLastValue(a._)
 			},
 			"eval":function(x){
@@ -116,6 +112,9 @@ module.exports={
 			},
 			trim:function(x){
 				return x.trim()
+			},
+			"==":function(x){
+				return a._==x
 			}
 		}
 
