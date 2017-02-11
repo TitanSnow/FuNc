@@ -84,7 +84,6 @@ module.exports={
 				return Function("a","x","with(a)return eval(x)")(a,x)
 			},
 			"'":function(){
-				debugger
 				var v=exp.v
 				var df=exp.df
 				var i
