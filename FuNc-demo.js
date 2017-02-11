@@ -21,7 +21,7 @@ if(process.argv.length<=2){
 			rl.question("> ",cb)
 		}else{
 			rl.question(". ",function cbsub(pv){
-				cb(v+" "+pv)
+				cb(v+"\n"+pv)
 			})
 		}
 		function calc_openleft(v){
