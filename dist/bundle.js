@@ -567,17 +567,22 @@ module.exports={
 var ev=require("../FuNc-evil.js")
 var evil=ev.evil
 var a={rt:require("../FuNc-rt.js")}
+function text2HTML(str){
+	var pre=document.createElement("pre")
+	pre.textContent=str
+	return pre.innerHTML
+}
 var rl={
 	question:(function(){
 		var con=document.getElementById("console")
-		con.value=""
+		con.textContent=""
 		var inp=document.getElementById("input")
 		inp.readOnly=true
 		var cmdhis=[""]
 		var pcmdhis=cmdhis.length-1
 		return function(tip,cb){
 			inp.readOnly=false
-			con.value+=tip
+			con.innerHTML+=text2HTML(tip)
 			inp.style.left=tip.length+"ch"
 			inp.style.width="calc(100% - "+tip.length+"ch)"
 			inp.addEventListener("keypress",function fc(e){
@@ -586,7 +591,7 @@ var rl={
 						e.preventDefault()
 						inp.readOnly=true
 						inp.removeEventListener("keypress",fc)
-						con.value+=inp.value+"\n"
+						con.innerHTML+=text2HTML(inp.value+"\n")
 						var top=parseFloat(inp.style.top)
 						inp.style.top=(isNaN(top)?0:top)+1.5+"em"
 						inp.style.left="0"
@@ -606,7 +611,7 @@ var rl={
 					case "ArrowDown":{
 						e.preventDefault()
 						inp.value=cmdhis[pcmdhis=Math.min(pcmdhis+1,cmdhis.length-1)]
-						break;
+						break
 					}
 					default:
 						return
@@ -616,8 +621,14 @@ var rl={
 	})()
 }
 console.log=function(x){
-	x=x.toString()
-	document.getElementById("console").value+=x+"\n"
+	var type=typeof(x)
+	x=x+""
+	var con=document.getElementById("console")
+	var span=document.createElement("span")
+	span.className=type
+	span.textContent=x
+	con.innerHTML+=span.outerHTML
+	con.innerHTML+="\n"
 	var inp=document.getElementById("input")
 	var top=parseFloat(inp.style.top)
 	inp.style.top=(isNaN(top)?0:top)+1.5+"em"

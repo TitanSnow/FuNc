@@ -16,6 +16,8 @@
 			#console{
 				width:100%;
 				height:1000em;
+				background-color:white;
+				color:black;
 			}
 			#input{
 				position:absolute;
@@ -29,10 +31,28 @@
 				font-size:12pt;
 				line-height:1.5em;
 			}
+			#console .undefined{
+				color:gray;
+			}
+			#console .string{
+				color:green;
+			}
+			#console .object{
+				color:black;
+			}
+			#console .boolean{
+				color:olive;
+			}
+			#console .number{
+				color:olive;
+			}
+			#console .function{
+				color:aqua;
+			}
 		</style>
 	</head>
 	<body>
-		<textarea id="console" disabled></textarea>
+		<pre id="console"></pre>
 		<input type="text" id="input" autofocus />
 		<script src="dist/bundle.js"></script>
 	</body>
