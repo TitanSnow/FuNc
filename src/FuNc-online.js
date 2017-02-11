@@ -8,6 +8,8 @@ var rl={
 		con.value=""
 		var inp=document.getElementById("input")
 		inp.readOnly=true
+		var cmdhis=[""]
+		var pcmdhis=cmdhis.length-1
 		return function(tip,cb){
 			inp.readOnly=false
 			con.value+=tip
@@ -25,8 +27,21 @@ var rl={
 						inp.style.left="0"
 						var val=inp.value
 						inp.value=""
+						cmdhis.splice(-1,0,val)
+						pcmdhis=cmdhis.length-1
 						cb(val)
 						break
+					}
+					case "ArrowUp":{
+						e.preventDefault()
+						if(pcmdhis==cmdhis.length-1)cmdhis[cmdhis.length-1]=inp.value
+						inp.value=cmdhis[pcmdhis=Math.max(pcmdhis-1,0)]
+						break
+					}
+					case "ArrowDown":{
+						e.preventDefault()
+						inp.value=cmdhis[pcmdhis=Math.min(pcmdhis+1,cmdhis.length-1)]
+						break;
 					}
 					default:
 						return
