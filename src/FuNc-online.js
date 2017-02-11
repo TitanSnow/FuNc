@@ -16,6 +16,7 @@ var rl={
 			inp.addEventListener("keypress",function fc(e){
 				switch(e.key){
 					case "Enter":{
+						e.preventDefault()
 						inp.readOnly=true
 						inp.removeEventListener("keypress",fc)
 						con.value+=inp.value+"\n"
