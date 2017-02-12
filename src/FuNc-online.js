@@ -71,7 +71,12 @@ console.log=function(x){
 	con.innerHTML+="\n"
 	var inp=document.getElementById("input")
 	var top=parseFloat(inp.style.top)
-	inp.style.top=(isNaN(top)?0:top)+1.5+"em"
+	inp.style.top=(isNaN(top)?0:top)+1.5*(count(x,/\r\n|\r|\n/g)+1)+"em"
+	function count(str,reg){
+		var cnt=0
+		for(;reg.exec(str)!==null;++cnt);
+		return cnt
+	}
 }
 rl.question("> ",function cb(v){
 	if(calc_openleft(v)){
