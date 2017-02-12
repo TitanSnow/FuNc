@@ -20,12 +20,12 @@ var rl={
 			con.innerHTML+=text2HTML(tip)
 			inp.style.left=tip.length+"ch"
 			inp.style.width="calc(100% - "+tip.length+"ch)"
-			inp.addEventListener("keypress",function fc(e){
+			inp.addEventListener("keydown",function fc(e){
 				switch(e.key){
 					case "Enter":{
 						e.preventDefault()
 						inp.readOnly=true
-						inp.removeEventListener("keypress",fc)
+						inp.removeEventListener("keydown",fc)
 						con.innerHTML+=text2HTML(inp.value+"\n")
 						var top=parseFloat(inp.style.top)
 						inp.style.top=(isNaN(top)?0:top)+1.5+"em"
