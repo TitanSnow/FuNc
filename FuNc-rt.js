@@ -112,6 +112,12 @@ module.exports={
 			trim:function(x){
 				return x.trim()
 			},
+			trimLeft:function(x){
+				return x.trimLeft()
+			},
+			trimRight:function(x){
+				return x.trimRight()
+			},
 			"==":function(x){
 				return a._==x
 			},
