@@ -57,6 +57,11 @@ var rl={
 }
 console.log=function(x){
 	var type=typeof(x)
+	if(type=="string"){
+		var rst=/^= (undefined|object|boolean|number|string|symbol|function) /.exec(x)
+		if(rst!==null)
+			type=rst[1]
+	}
 	x=x+""
 	var con=document.getElementById("console")
 	var span=document.createElement("span")
