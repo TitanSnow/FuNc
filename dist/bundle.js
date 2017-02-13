@@ -592,6 +592,30 @@ module.exports={
 			},
 			">=":function(x){
 				return a._>=x
+			},
+			test:function(x,y,z){
+				switch(y){
+					case "==":case "$eq":
+						return x==z
+					case "!=":case "$ne":
+						return x!=z
+					case "===":case "$seq":
+						return x===z
+					case "!==":case "$sne":
+						return x!==z
+					case ">":case "$gt":
+						return x>z
+					case ">=":case "$ge":
+						return x>=z
+					case "<":case "$lt":
+						return x<z
+					case "<=":case "$le":
+						return x<=z
+					case "and":case "$a":
+						return x&&z
+					case "or":case "$o":
+						return x||z
+				}
 			}
 		}
 
