@@ -9,8 +9,16 @@ module.exports={
 			exit:function(x){
 				return process.exit(x),null
 			},
-			"=":function(x){
-				return a[a.__]=x
+			"=":function(y){
+				var x=a.__
+				var pfunc=a.rt.thisFunc
+				while(pfunc!=null){
+					if(pfunc.FuNcLocals.hasOwnProperty(x)){
+						return pfunc.FuNcLocals[x]=y
+					}
+					pfunc=pfunc.FuNcFather
+				}
+				return a[x]=y
 			},
 			"[":function(){
 				var cnt=1
@@ -41,16 +49,25 @@ module.exports={
 				var fst=df.lastIndex
 				df.lastIndex=i
 				var estr=v.substring(fst,i-1)
-				return (function(native_code){
+				var func=(function(native_code){
 					return function(){ return native_code() }
 				})(function(){
 					var v=exp.v
 					var li=exp.df.lastIndex
-					var rv=exp.evil(estr,exp.a)
+					var father=a.rt.thisFunc
+					a.rt.thisFunc=func
+					var rv=exp.evil(estr,a)
 					exp.v=v
 					exp.df.lastIndex=li
+					a.rt.thisFunc=father
 					return rv
 				})
+				func.toString=function(){
+					return "["+estr+"]"
+				}
+				func.FuNcLocals={}
+				func.FuNcFather=a.rt.thisFunc
+				return func
 			},
 			str:function(x){
 				return x.toString()
@@ -146,6 +163,13 @@ module.exports={
 				return Math.floor(a._/x)
 			},
 			"set":function(x,y){
+				var pfunc=a.rt.thisFunc
+				while(pfunc!=null){
+					if(pfunc.FuNcLocals.hasOwnProperty(x)){
+						return pfunc.FuNcLocals[x]=y
+					}
+					pfunc=pfunc.FuNcFather
+				}
 				return a[x]=y
 			},
 			"`":function(){
@@ -231,6 +255,20 @@ module.exports={
 				}else{
 					return [arr,x]
 				}
+			},
+			"local":function(x){
+				a.rt.thisFunc.FuNcLocals[x]=x
+			},
+			"del":function(x){
+				var pfunc=a.rt.thisFunc
+				while(pfunc!=null){
+					if(pfunc.FuNcLocals.hasOwnProperty(x)){
+						delete pfunc.FuNcLocals[x]
+						return
+					}
+					pfunc=pfunc.FuNcFather
+				}
+				delete a[x]
 			}
 		}
 
@@ -246,7 +284,17 @@ module.exports={
 			}
 		}
 
-		var rst=a[name]
+		var pfunc=a.rt.thisFunc
+		var rst
+		while(pfunc!=null){
+			rst=pfunc.FuNcLocals[name]
+			if(typeof(rst)=="function")
+				return ret(rst)
+			if(typeof(rst)!="undefined")
+				return ret(function(){ return rst })
+			pfunc=pfunc.FuNcFather
+		}
+		rst=a[name]
 		if(typeof(rst)=="function")
 			return ret(rst)
 		else if(typeof(rst)=="undefined"){
