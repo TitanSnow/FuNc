@@ -653,6 +653,12 @@ module.exports={
 					return [arr,x]
 				}
 			},
+			";":function(){
+				return [a._]
+			},
+			";;":function(){
+				return []
+			},
 			"local":function(x){
 				a.rt.thisFunc.FuNcLocals[x]=x
 			},
@@ -666,6 +672,30 @@ module.exports={
 					pfunc=pfunc.FuNcFather
 				}
 				delete a[x]
+			},
+			"func":function(args,body){
+				var func=function(){
+					var len=args.length
+					var i
+					for(i=0;i<len;++i)
+						body.FuNcLocals[args[i]]=arguments[i]
+					return body()
+				}
+				func.FuNcLen=function(){
+					return args.length
+				}
+				func.toString=function(){
+					var len=args.length
+					var rst="func @[ "
+					var i
+					for(i=0;i<len;++i)
+						if(typeof(args[i])=="string")
+							rst+="'"+args[i]+(i!=len-1?"', ":(len==1?"'; ":"' "))
+						else
+							rst+=args[i]+(i!=len-1?" , ":(len==1?" ; ":" "))
+					return rst+(len!=0?"] ":";; ] ")+body
+				}
+				return func
 			}
 		}
 
