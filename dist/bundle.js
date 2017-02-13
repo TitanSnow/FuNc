@@ -518,6 +518,15 @@ module.exports={
 			"==":function(x){
 				return a._==x
 			},
+			"!=":function(x){
+				return a._!=x
+			},
+			"===":function(x){
+				return a._===x
+			},
+			"!==":function(x){
+				return a._!==x
+			},
 			"+":function(x){
 				return a._+x
 			},
@@ -544,6 +553,45 @@ module.exports={
 			},
 			"@":function(x){
 				return x()
+			},
+			"not":function(x){
+				return !x
+			},
+			"and":function(x){
+				return a._&&x
+			},
+			"or":function(x){
+				return a._||x
+			},
+			"true":function(){
+				return true
+			},
+			"false":function(){
+				return false
+			},
+			"if":function(x,y,z){
+				if(x)
+					return y()
+				else
+					return z()
+			},
+			"?":function(x,y,z){
+				if(x)
+					return y
+				else
+					return z
+			},
+			"<":function(x){
+				return a._<x
+			},
+			">":function(x){
+				return a._>x
+			},
+			"<=":function(x){
+				return a._<=x
+			},
+			">=":function(x){
+				return a._>=x
 			}
 		}
 
