@@ -299,6 +299,28 @@ module.exports={
 					return rst+(len!=0?"] ":";; ] ")+body
 				}
 				return func
+			},
+			"range":function(args){
+				if(args.length===void(0))
+					args=[args]
+				args=Array.from(args)
+				if(args.length==0)
+					return []
+				if(args.length==1)
+					args.unshift(0)
+				if(args.length==2)
+					args.push(1)
+				var rst=[]
+				var i
+				for(i=args[0];i<args[1];i+=args[2])
+					rst.push(i)
+				return rst
+			},
+			"for":function(rg,func){
+				var i
+				var len=rg.length
+				for(i=0;i<len;++i)
+					func(rg[i])
 			}
 		}
 
