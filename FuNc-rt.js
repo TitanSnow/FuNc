@@ -222,6 +222,15 @@ module.exports={
 			},
 			"while":function(x,y){
 				while(x())y()
+			},
+			",":function(x){
+				var arr=a._
+				if(typeof(arr.push)=="function"){
+					arr.push(x)
+					return arr
+				}else{
+					return [arr,x]
+				}
 			}
 		}
 
