@@ -125,6 +125,8 @@ function nxtfun(){
 			return err.returnValue
 		throw err
 	}
+	if(rv===void(0))
+		rv=null
 	a._=rv						// store the last return val
 	a.__=tok					// store the last token
 	return rv
