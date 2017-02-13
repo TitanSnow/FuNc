@@ -452,7 +452,13 @@ module.exports={
 					var v=exp.v
 					var li=exp.df.lastIndex
 					var father=a.rt.thisFunc
-					a.rt.thisFunc=func
+					a.rt.thisFunc=function(){return func.apply(this,arguments)}
+					if(func.FuNcArgs!==void(0))
+						a.rt.thisFunc.FuNcLocals=func.FuNcArgs
+					else
+						a.rt.thisFunc.FuNcLocals={}
+					func.FuNcArgs={}
+					a.rt.thisFunc.FuNcFather=func.FuNcFather
 					var rv=exp.evil(estr,a)
 					exp.v=v
 					exp.df.lastIndex=li
@@ -462,8 +468,8 @@ module.exports={
 				func.toString=function(){
 					return "["+estr+"]"
 				}
-				func.FuNcLocals={}
 				func.FuNcFather=a.rt.thisFunc
+				func.FuNcArgs={}
 				return func
 			},
 			str:function(x){
@@ -678,7 +684,7 @@ module.exports={
 					var len=args.length
 					var i
 					for(i=0;i<len;++i)
-						body.FuNcLocals[args[i]]=arguments[i]
+						body.FuNcArgs[args[i]]=arguments[i]
 					return body()
 				}
 				func.FuNcLen=function(){
@@ -722,6 +728,9 @@ module.exports={
 			".":function(key){
 				if(typeof(a._[key])=="function"&&a._[key]!==void(0)) return a._[key].bind(a._)
 				return a._[key]
+			},
+			".=":function(key,value){
+				return a._[key]=value
 			}
 		}
 
