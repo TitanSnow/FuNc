@@ -323,7 +323,8 @@ module.exports={
 					func(rg[i])
 			},
 			".":function(key){
-				return a._[key].bind(a._)
+				if(typeof(a._[key])=="function"&&a._[key]!==void(0)) return a._[key].bind(a._)
+				return a._[key]
 			}
 		}
 
