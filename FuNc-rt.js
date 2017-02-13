@@ -321,6 +321,9 @@ module.exports={
 				var len=rg.length
 				for(i=0;i<len;++i)
 					func(rg[i])
+			},
+			".":function(key){
+				return a._[key].bind(a._)
 			}
 		}
 
