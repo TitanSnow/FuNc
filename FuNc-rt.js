@@ -219,6 +219,9 @@ module.exports={
 					case "or":case "$o":
 						return x||z
 				}
+			},
+			"while":function(x,y){
+				while(x())y()
 			}
 		}
 
