@@ -1,7 +1,7 @@
 "use strict"
 var ev=require("../FuNc-evil.js")
 var evil=ev.evil
-var a={rt:require("../FuNc-rt.js")}
+var a={rt:require("../FuNc-rt.js"),"window":window}
 function text2HTML(str){
 	var pre=document.createElement("pre")
 	pre.textContent=str

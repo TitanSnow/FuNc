@@ -720,7 +720,8 @@ module.exports={
 					func(rg[i])
 			},
 			".":function(key){
-				return a._[key].bind(a._)
+				if(typeof(a._[key])=="function"&&a._[key]!==void(0)) return a._[key].bind(a._)
+				return a._[key]
 			}
 		}
 
@@ -767,7 +768,7 @@ module.exports={
 "use strict"
 var ev=require("../FuNc-evil.js")
 var evil=ev.evil
-var a={rt:require("../FuNc-rt.js")}
+var a={rt:require("../FuNc-rt.js"),"window":window}
 function text2HTML(str){
 	var pre=document.createElement("pre")
 	pre.textContent=str
