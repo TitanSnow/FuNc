@@ -141,6 +141,12 @@ module.exports={
 			},
 			"`":function(){
 				return exp.nxttok()
+			},
+			"@[":function(){
+				return inthings["["]()()
+			},
+			"@":function(x){
+				return x()
 			}
 		}
 

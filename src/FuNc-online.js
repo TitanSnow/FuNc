@@ -21,6 +21,8 @@ var rl={
 			inp.style.left=tip.length+"ch"
 			inp.style.width="calc(100% - "+tip.length+"ch)"
 			inp.addEventListener("keydown",function fc(e){
+				if(e.key===void(0))
+					e.key=e.code
 				switch(e.key){
 					case "Enter":{
 						e.preventDefault()
@@ -30,6 +32,7 @@ var rl={
 						var top=parseFloat(inp.style.top)
 						inp.style.top=(isNaN(top)?0:top)+1.5+"em"
 						inp.style.left="0"
+						inp.style.width="100%"
 						var val=inp.value
 						inp.value=""
 						cmdhis.splice(-1,0,val)
