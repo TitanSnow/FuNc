@@ -1,4 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+
+},{}],2:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -180,7 +182,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 // FuNc-evil.js
 // FuNc evaler (core part)
 // lexical analysis & code evaluation
@@ -393,7 +395,7 @@ module.exports=new class{
 	}
 }
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 (function (process){
 "use strict"
 module.exports={
@@ -779,7 +781,8 @@ module.exports={
 }
 
 }).call(this,require('_process'))
-},{"_process":1}],4:[function(require,module,exports){
+},{"_process":2}],5:[function(require,module,exports){
+(function (process){
 "use strict"
 var ev=require("../FuNc-evil.js")
 var evil=ev.evil
@@ -867,48 +870,70 @@ console.log=function(x){
 		return cnt
 	}
 }
-rl.question("> ",function cb(v){
-	if(calc_openleft(v)){
-		try{
-			var r=evil(v,a)
-		}catch(err){
-			if(!(err instanceof ev.NF))
-				throw err
-			rl.question(". ",cb)
-			return
-		}
-		console.log("= "+typeof(r)+" "+r)
-		rl.question("> ",cb)
-	}else{
-		rl.question(". ",function cbsub(pv){
-			cb(v+"\n"+pv)
-		})
-	}
-	function calc_openleft(v){
-		var vi
-		var cnt=0
-		var inq=false
-		var non=0
-		var i
-		for(i=0;i<v.length;++i,--non)
-			switch(v[i]){
-				case '[':
-					if(!inq)++cnt
-					break
-				case ']':
-					if(!inq&&--cnt==0);
-					break
-				case "'":
-					if(non<=0)inq=!inq
-					break
-				case "\\":
-					if(inq)non=2
-					break
-				default:
-					break
+;if(process.argv.length<=2){
+	rl.question("> ",function cb(v){
+		if(calc_openleft(v)){
+			try{
+				var r=evil(v,a)
+			}catch(err){
+				if(!(err instanceof ev.NF))
+					throw err
+				rl.question(". ",cb)
+				return
 			}
-		return !inq&&cnt==0
+			console.log("= "+typeof(r)+" "+r)
+			rl.question("> ",cb)
+		}else{
+			rl.question(". ",function cbsub(pv){
+				cb(v+"\n"+pv)
+			})
+		}
+		function calc_openleft(v){
+			var vi
+			var cnt=0
+			var inq=false
+			var non=0
+			var i
+			for(i=0;i<v.length;++i,--non)
+				switch(v[i]){
+					case '[':
+						if(!inq)++cnt
+						break
+					case ']':
+						if(!inq&&--cnt==0);
+						break
+					case "'":
+						if(non<=0)inq=!inq
+						break
+					case "\\":
+						if(inq)non=2
+						break
+					default:
+						break
+				}
+			return !inq&&cnt==0
+		}
+	})
+}else{
+	var fs=require("fs")
+	var filename=process.argv[2]
+	var raw_v=fs.readFileSync(filename)
+	var v=raw_v.toString("binary")
+	var coding_rex=/^.*(?:\r\n|\r|\n)?.*coding[ \t]*[:=][ \t]*(\S+)/
+	var rst=coding_rex.exec(v)
+	var coding
+	if(rst!==null) coding=rst[1]
+	else{
+		v=raw_v.toString("ucs2")
+		rst=coding_rex.exec(v)
+		if(rst!==null) coding=rst[1]
 	}
-})
+	if(typeof(coding)=="undefined")
+		coding="utf8"
+	v=raw_v.toString(coding)
+	evil(v,a)
+}
+;
 
-},{"../FuNc-evil.js":2,"../FuNc-rt.js":3}]},{},[4]);
+}).call(this,require('_process'))
+},{"../FuNc-evil.js":3,"../FuNc-rt.js":4,"_process":2,"fs":1}]},{},[5]);

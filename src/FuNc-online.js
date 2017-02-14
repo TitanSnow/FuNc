@@ -85,46 +85,4 @@ console.log=function(x){
 		return cnt
 	}
 }
-rl.question("> ",function cb(v){
-	if(calc_openleft(v)){
-		try{
-			var r=evil(v,a)
-		}catch(err){
-			if(!(err instanceof ev.NF))
-				throw err
-			rl.question(". ",cb)
-			return
-		}
-		console.log("= "+typeof(r)+" "+r)
-		rl.question("> ",cb)
-	}else{
-		rl.question(". ",function cbsub(pv){
-			cb(v+"\n"+pv)
-		})
-	}
-	function calc_openleft(v){
-		var vi
-		var cnt=0
-		var inq=false
-		var non=0
-		var i
-		for(i=0;i<v.length;++i,--non)
-			switch(v[i]){
-				case '[':
-					if(!inq)++cnt
-					break
-				case ']':
-					if(!inq&&--cnt==0);
-					break
-				case "'":
-					if(non<=0)inq=!inq
-					break
-				case "\\":
-					if(inq)non=2
-					break
-				default:
-					break
-			}
-		return !inq&&cnt==0
-	}
-})
+//#include src/FuNc-repl.js
