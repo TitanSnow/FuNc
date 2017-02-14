@@ -731,6 +731,12 @@ module.exports={
 			},
 			".=":function(key,value){
 				return a._[key]=value
+			},
+			"require":function(x){
+				return require(x)
+			},
+			empty:function(){
+				return {}
 			}
 		}
 
