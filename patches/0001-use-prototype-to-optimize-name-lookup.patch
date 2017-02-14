@@ -1,0 +1,137 @@
+From 3263fc5271e17a1966d5636237f6e05b4e299a54 Mon Sep 17 00:00:00 2001
+From: TitanSnow <sweeto@live.cn>
+Date: Tue, 14 Feb 2017 19:10:25 +0800
+Subject: [PATCH] use prototype to optimize name lookup
+
+---
+ FuNc-rt.js     | 23 +++++++++--------------
+ dist/bundle.js | 23 +++++++++--------------
+ 2 files changed, 18 insertions(+), 28 deletions(-)
+
+diff --git a/FuNc-rt.js b/FuNc-rt.js
+index c729dff..c3180f8 100644
+--- a/FuNc-rt.js
++++ b/FuNc-rt.js
+@@ -58,9 +58,8 @@ module.exports={
+ 					a.rt.thisFunc=function(){return func.apply(this,arguments)}
+ 					if(func.FuNcArgs!==void(0))
+ 						a.rt.thisFunc.FuNcLocals=func.FuNcArgs
+-					else
+-						a.rt.thisFunc.FuNcLocals={}
+-					func.FuNcArgs={}
++					if(func.FuNcFather!=null) func.FuNcArgs=Object.create(func.FuNcFather.FuNcLocals)
++					else func.FuNcArgs=Object.create(a)
+ 					a.rt.thisFunc.FuNcFather=func.FuNcFather
+ 					var rv=exp.evil(estr,a)
+ 					exp.v=v
+@@ -72,7 +71,8 @@ module.exports={
+ 					return "["+estr+"]"
+ 				}
+ 				func.FuNcFather=a.rt.thisFunc
+-				func.FuNcArgs={}
++				if(func.FuNcFather!=null) func.FuNcArgs=Object.create(func.FuNcFather.FuNcLocals)
++				else func.FuNcArgs=Object.create(a)
+ 				return func
+ 			},
+ 			str:function(x){
+@@ -332,14 +332,14 @@ module.exports={
+ 				}
+ 				func.toString=function(){
+ 					var len=args.length
+-					var rst="func @[ "
++					var rst="func ( "
+ 					var i
+ 					for(i=0;i<len;++i)
+ 						if(typeof(args[i])=="string")
+ 							rst+="'"+args[i]+(i!=len-1?"', ":(len==1?"'; ":"' "))
+ 						else
+ 							rst+=args[i]+(i!=len-1?" , ":(len==1?" ; ":" "))
+-					return rst+(len!=0?"] ":";; ] ")+body
++					return rst+(len!=0?") ":";; ) ")+body
+ 				}
+ 				return func
+ 			},
+@@ -420,15 +420,10 @@ module.exports={
+ 
+ 		var pfunc=a.rt.thisFunc
+ 		var rst
+-		while(pfunc!=null){
++		if(pfunc!=null)
+ 			rst=pfunc.FuNcLocals[name]
+-			if(typeof(rst)=="function")
+-				return ret(rst)
+-			if(typeof(rst)!="undefined")
+-				return ret(function(){ return rst })
+-			pfunc=pfunc.FuNcFather
+-		}
+-		rst=a[name]
++		else
++			rst=a[name]
+ 		if(typeof(rst)=="function")
+ 			return ret(rst)
+ 		else if(typeof(rst)=="undefined"){
+diff --git a/dist/bundle.js b/dist/bundle.js
+index fec1d55..85239cb 100755
+--- a/dist/bundle.js
++++ b/dist/bundle.js
+@@ -457,9 +457,8 @@ module.exports={
+ 					a.rt.thisFunc=function(){return func.apply(this,arguments)}
+ 					if(func.FuNcArgs!==void(0))
+ 						a.rt.thisFunc.FuNcLocals=func.FuNcArgs
+-					else
+-						a.rt.thisFunc.FuNcLocals={}
+-					func.FuNcArgs={}
++					if(func.FuNcFather!=null) func.FuNcArgs=Object.create(func.FuNcFather.FuNcLocals)
++					else func.FuNcArgs=Object.create(a)
+ 					a.rt.thisFunc.FuNcFather=func.FuNcFather
+ 					var rv=exp.evil(estr,a)
+ 					exp.v=v
+@@ -471,7 +470,8 @@ module.exports={
+ 					return "["+estr+"]"
+ 				}
+ 				func.FuNcFather=a.rt.thisFunc
+-				func.FuNcArgs={}
++				if(func.FuNcFather!=null) func.FuNcArgs=Object.create(func.FuNcFather.FuNcLocals)
++				else func.FuNcArgs=Object.create(a)
+ 				return func
+ 			},
+ 			str:function(x){
+@@ -731,14 +731,14 @@ module.exports={
+ 				}
+ 				func.toString=function(){
+ 					var len=args.length
+-					var rst="func @[ "
++					var rst="func ( "
+ 					var i
+ 					for(i=0;i<len;++i)
+ 						if(typeof(args[i])=="string")
+ 							rst+="'"+args[i]+(i!=len-1?"', ":(len==1?"'; ":"' "))
+ 						else
+ 							rst+=args[i]+(i!=len-1?" , ":(len==1?" ; ":" "))
+-					return rst+(len!=0?"] ":";; ] ")+body
++					return rst+(len!=0?") ":";; ) ")+body
+ 				}
+ 				return func
+ 			},
+@@ -819,15 +819,10 @@ module.exports={
+ 
+ 		var pfunc=a.rt.thisFunc
+ 		var rst
+-		while(pfunc!=null){
++		if(pfunc!=null)
+ 			rst=pfunc.FuNcLocals[name]
+-			if(typeof(rst)=="function")
+-				return ret(rst)
+-			if(typeof(rst)!="undefined")
+-				return ret(function(){ return rst })
+-			pfunc=pfunc.FuNcFather
+-		}
+-		rst=a[name]
++		else
++			rst=a[name]
+ 		if(typeof(rst)=="function")
+ 			return ret(rst)
+ 		else if(typeof(rst)=="undefined"){
+-- 
+1.9.5.msysgit.1
+
