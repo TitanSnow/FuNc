@@ -45,7 +45,7 @@
 ~randseq = [
 	local`rst
 	rst = ;;
-	for range maxn func(i;)[
+	for range maxn func( `i; )[
 		rst.push _ randint
 	]
 	rst
