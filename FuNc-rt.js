@@ -369,6 +369,9 @@ module.exports={
 				if(typeof(a._[key])=="function"&&a._[key]!==void(0)) return a._[key].bind(a._)
 				return a._[key]
 			},
+			".`":function(){
+				return inthings["."](exp.nxttok())
+			},
 			".=":function(key,value){
 				return a._[key]=value
 			},
