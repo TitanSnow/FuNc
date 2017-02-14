@@ -24,10 +24,10 @@ if(process.argv.length<=2){
 			var i
 			for(i=0;i<v.length;++i,--non)
 				switch(v[i]){
-					case '[':
+					case '[':case '(':
 						if(!inq)++cnt
 						break
-					case ']':
+					case ']':case ')':
 						if(!inq&&--cnt==0);
 						break
 					case "'":

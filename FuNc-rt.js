@@ -184,6 +184,37 @@ module.exports={
 			"@[":function(){
 				return inthings["["]()()
 			},
+			"(":function(){
+				var cnt=1
+				var v=exp.v
+				var df=exp.df
+				var i
+				var cont=true
+				var inq=false
+				var non=0
+				for(i=df.lastIndex;cont&&i<v.length;++i,--non)
+					switch(v[i]){
+						case '(':
+							if(!inq)++cnt
+							break
+						case ')':
+							if(!inq&&--cnt==0) cont=false
+							break
+						case "'":
+							if(non<=0)inq=!inq
+							break
+						case "\\":
+							if(inq)non=2
+							break
+						default:
+							break
+					}
+				if(cont)throw new exp.NF()
+				var li=df.lastIndex
+				exp.v=v.slice(0,i-1)+']'+v.slice(i)
+				exp.df.lastIndex=li
+				return inthings["@["]()
+			},
 			"@":function(x){
 				return x()
 			},
