@@ -701,6 +701,12 @@ module.exports={
 			"local":function(x){
 				a.rt.thisFunc.FuNcLocals[x]=x
 			},
+			"locals":function(x){
+				var len=x.length
+				var i
+				for(i=0;i<len;++i)
+					a.rt.thisFunc.FuNcLocals[x[i]]=x[i]
+			},
 			"del":function(x){
 				var pfunc=a.rt.thisFunc
 				while(pfunc!=null){
