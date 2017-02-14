@@ -60,14 +60,18 @@ var rl={
 }
 console.log=function(x){
 	var type=typeof(x)
-	if(type=="string"){
-		var rst=/^= (undefined|object|boolean|number|string|symbol|function) /.exec(x)
-		if(rst!==null)
-			type=rst[1]
-	}
-	x=x+""
 	var con=document.getElementById("console")
 	var span=document.createElement("span")
+	if(type=="string"){
+		var reg=/^= (undefined|object|boolean|number|string|symbol|function) /g
+		var rst=reg.exec(x)
+		if(rst!==null){
+			type=rst[1]
+			con.innerHTML+=text2HTML("= "+type+" ")
+			x=x.slice(reg.lastIndex)
+		}
+	}
+	x=x+""
 	span.className=type
 	span.textContent=x
 	con.innerHTML+=span.outerHTML
