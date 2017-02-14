@@ -1,0 +1,60 @@
+~quicksort = func( `A, `lo, `hi ) [
+	if(lo<hi) [
+		local p
+		p = partition A lo hi
+		quicksort A lo p
+		quicksort A (p+1) hi
+	][ ]
+]
+~partition = func( `A, `lo, `hi ) [
+	locals ( `pivot, `i, `j, `t, `cont )
+	pivot = (A.lo)
+	i = (lo-1)
+	j = (hi+1)
+	cont = true
+	while[cont] [
+		i = (i+1)
+		while[ (A.i) < pivot ] [
+			i = (i+1)
+		]
+
+		j = (j-1)
+		while[ (A.j) > pivot ] [
+			j = (j-1)
+		]
+
+		if(i>=j) [
+			cont = false
+		][
+			t = (A.i)
+			A.=i (A.j)
+			A.=j t
+		]
+	]
+	j
+]
+~rand = [
+	if(global== `global)[
+		window.Math.random _
+	][
+		global.Math.random _
+	]
+]
+~randint = [ rand*32767//1 ]
+~maxn = 10
+~randseq = [
+	local rst
+	rst = ;;
+	for range maxn func(i;)[
+		rst.push _ randint
+	]
+	rst
+]
+~main = [
+	local arr
+	arr = randseq
+	print arr
+	quicksort arr 0 (len arr - 1)
+	print arr
+]
+main
