@@ -1,24 +1,30 @@
-~bubblesort = func@[A;][
+~bubblesort = func(A;)[
 	local n
 	n = len A
-	for range n func@[i;][
-		for range@[n-1] func@[j;][
-			if@[A.j> @[A. @[j+1]]][
+	for range n func(i;)[
+		for range(n-1) func(j;)[
+			if(A.j> (A. (j+1)))[
 				local t
-				t = @[A.j]
-				A.=j @[A. @[j+1]]
-				A.= @[j+1] t
+				t = (A.j)
+				A.=j (A. (j+1))
+				A.= (j+1) t
 			][ ]
 		]
 	]
 ]
-~rand = [ eval'Math.random()' ]
+~rand = [
+	if(global== `global)[
+		window.Math.random _
+	][
+		global.Math.random _
+	]
+]
 ~randint = [ rand*32767//1 ]
 ~maxn = 10
 ~randseq = [
 	local rst
 	rst = ;;
-	for range maxn func@[i;][
+	for range maxn func(i;)[
 		rst.push _ randint
 	]
 	rst
