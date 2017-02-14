@@ -797,6 +797,11 @@ module.exports={
 			},
 			"ground":function(){
 				return a
+			},
+			"floor":function(){
+				var obj=a.rt.thisFunc.FuNcLocals
+				obj.upstair=a.rt.thisFunc.FuNcFather.FuNcLocals
+				return obj
 			}
 		}
 
