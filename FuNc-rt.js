@@ -375,11 +375,29 @@ module.exports={
 			".=":function(key,value){
 				return a._[key]=value
 			},
+			".+=":function(key,value){
+				return a._[key]+=value
+			},
+			".-=":function(key,value){
+				return a._[key]-=value
+			},
+			".*=":function(key,value){
+				return a._[key]*=value
+			},
+			"./=":function(key,value){
+				return a._[key]/=value
+			},
+			".//=":function(key,value){
+				return a._[key]=Math.floor(a._[key]/value)
+			},
 			"require":function(x){
 				return require(x)
 			},
 			empty:function(){
 				return {}
+			},
+			"ground":function(){
+				return a
 			}
 		}
 
