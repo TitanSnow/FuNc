@@ -34,7 +34,7 @@ if(process.argv.length<=2){
 						if(non<=0)inq=!inq
 						break
 					case "\\":
-						if(inq)non=2
+						if(inq&&non<=0)non=2
 						break
 					default:
 						break

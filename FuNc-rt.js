@@ -1,46 +1,68 @@
+// FuNc-rt.js
+// FuNc runtime
+// runtime implement name-lookup and
+// things must implement in native
+// or most called things
+//
+// runtime can be replaced to make
+// a dialect
+//
+// here code pile up like a trash mountain
+
 "use strict"
 module.exports={
+	// lookup: input evil struct & name, return function as its name
 	lookup:function(exp,name){
 		var a=exp.a
+		// inthings are runtime functions
+		// usually use "x,y,z" as args
 		var inthings={
+			// print things. wrapper console.log
 			print:function(x){
-				return console.log(x),null
+				return console.log(x),null		// return null is not necessary
 			},
+			// exit in Nodejs. wrapper process.exit
+			// remove this if sure run in browser
 			exit:function(x){
-				return process.exit(x),null
+				return process.exit(x),null		// return null is not necessary
 			},
+			// assignment
 			"=":function(y){
-				var x=a.__
-				var pfunc=a.rt.thisFunc
-				while(pfunc!=null){
+				var x=a.__						// left name
+				var pfunc=a.rt.thisFunc			// start finding name from bottom to top
+				while(pfunc!=null){				// if is null, means get top
 					if(pfunc.FuNcLocals.hasOwnProperty(x)){
-						return pfunc.FuNcLocals[x]=y
+						return pfunc.FuNcLocals[x]=y		// find and assign
 					}
-					pfunc=pfunc.FuNcFather
+					pfunc=pfunc.FuNcFather		// go up
 				}
-				return a[x]=y
+				return a[x]=y					// fallback to ground
 			},
+			// make a function
+			// IMPORTANT & MESSY
 			"[":function(){
+				// store all things about
 				var cnt=1
 				var v=exp.v
 				var df=exp.df
+				// find ]
 				var i
-				var cont=true
-				var inq=false
-				var non=0
-				for(i=df.lastIndex;cont&&i<v.length;++i,--non)
+				var cont=true	// flag to continue loop
+				var inq=false	// flag is in quote
+				var non=0		// '\' flag
+				for(i=df.lastIndex;cont&&i<v.length;++i,--non)	// go through string, dec '\' flag per time
 					switch(v[i]){
 						case '[':
-							if(!inq)++cnt
+							if(!inq)++cnt					// if not in quote, inc level
 							break
 						case ']':
-							if(!inq&&--cnt==0) cont=false
+							if(!inq&&--cnt==0) cont=false	// if not in quote, dec level. to 0, set off cont flag
 							break
 						case "'":
-							if(non<=0)inq=!inq
+							if(non<=0)inq=!inq				// meet "'", flip inq flag
 							break
 						case "\\":
-							if(inq)non=2
+							if(inq&&non<=0)non=2			// meet '\', turn on 
 							break
 						default:
 							break
@@ -115,7 +137,7 @@ module.exports={
 				for(i=df.lastIndex;cont&&i<v.length;++i,--non)
 					switch(v[i]){
 						case "\\":
-							non=2
+							if(non<=0)non=2
 							break
 						case "'":
 							if(non<=0)
@@ -204,7 +226,7 @@ module.exports={
 							if(non<=0)inq=!inq
 							break
 						case "\\":
-							if(inq)non=2
+							if(inq&&non<=0)non=2
 							break
 						default:
 							break
