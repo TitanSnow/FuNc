@@ -1,0 +1,39 @@
+From 3c8cdd6e295fac72f2bc814e2b15bb76d7354e53 Mon Sep 17 00:00:00 2001
+From: TitanSnow <sweeto@live.cn>
+Date: Wed, 15 Feb 2017 13:08:26 +0800
+Subject: [PATCH] use non-bind .
+
+---
+ FuNc-rt.js | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/FuNc-rt.js b/FuNc-rt.js
+index c729dff..aa9ebcd 100644
+--- a/FuNc-rt.js
++++ b/FuNc-rt.js
+@@ -366,8 +366,20 @@ module.exports={
+ 					func(rg[i])
+ 			},
+ 			".":function(key){
+-				if(typeof(a._[key])=="function"&&a._[key]!==void(0)) return a._[key].bind(a._)
+-				return a._[key]
++				var _=a._
++				if(typeof(_[key])=="function"){
++					var func
++					var args=[]
++					var len=_[key].length
++					var i
++					for(i=0;i<len;++i) args.push("a"+i)
++					func=eval("("+args+")=>{_[key]("+args+")}")
++					func.FuNcLen=function(){
++						return _[key].length
++					}
++					return func
++				}
++				return _[key]
+ 			},
+ 			".`":function(){
+ 				return inthings["."](exp.nxttok())
+-- 
+1.9.5.msysgit.1
+
