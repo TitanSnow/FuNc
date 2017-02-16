@@ -867,7 +867,7 @@ module.exports={
 },{"_process":1}],4:[function(require,module,exports){
 "use strict"
 var evil=require("../FuNc-evil.js").evil
-var a={rt:require("../FuNc-rt.js")}
+var a={rt:require("../FuNc-rt.js"),window:window}
 window.FuNc=function(src){
 	return new Promise(function(suc,fal){
 		var xhr=new XMLHttpRequest()

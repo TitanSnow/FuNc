@@ -1,6 +1,6 @@
 "use strict"
 var evil=require("../FuNc-evil.js").evil
-var a={rt:require("../FuNc-rt.js")}
+var a={rt:require("../FuNc-rt.js"),window:window}
 window.FuNc=function(src){
 	return new Promise(function(suc,fal){
 		var xhr=new XMLHttpRequest()
