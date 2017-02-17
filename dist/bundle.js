@@ -837,6 +837,9 @@ module.exports={
 				var rag=Array.from(args)
 				rag.unshift(cls)
 				return eval("("+sar+")=>{return new a0("+sar.slice(1)+")}").apply(null,rag)
+			},
+			"apply":function(fun,args){
+				return fun.apply(null,args)
 			}
 		}
 
