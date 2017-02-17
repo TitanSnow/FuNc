@@ -425,6 +425,19 @@ module.exports={
 				var obj=a.rt.thisFunc.FuNcLocals
 				obj.upstair=a.rt.thisFunc.FuNcFather.FuNcLocals
 				return obj
+			},
+			"new":function(cls){
+				return new cls()
+			},
+			"news":function(cls,args){
+				var i
+				var len=args.length+1
+				var sar=[]
+				for(i=0;i<len;++i)
+					sar.push("a"+i)
+				var rag=Array.from(args)
+				rag.unshift(cls)
+				return eval("("+sar+")=>{return new a0("+sar.slice(1)+")}").apply(null,rag)
 			}
 		}
 
