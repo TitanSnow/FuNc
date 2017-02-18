@@ -1,5 +1,4 @@
-all:
-	echo 'make console OR make online'
+all: console online browser
 console: FuNc-demo.js
 online: dist/bundle.js
 browser: dist/func.js
