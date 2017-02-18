@@ -502,6 +502,17 @@ module.exports={
 						}))
 					})(mns[i])
 				Promise.all(pms).then(cb)
+			},
+			"forin":function(obj,cb){
+				var key
+				for(key in obj)
+					cb(key)
+			},
+			"forinown":function(obj,cb){
+				var key
+				for(key in obj)
+					if(obj.hasOwnProperty(key))
+						cb(key)
 			}
 		}
 

@@ -896,6 +896,29 @@ module.exports={
 					}
 					xhr.send()
 				}
+			},
+			"imports":function(mns,cb){
+				var pms=[]
+				var i
+				var len=mns.length
+				for(i=0;i<len;++i)
+					(function(mn){
+						pms.push(new Promise(function(suc,fal){
+							inthings["import"](mn,suc)
+						}))
+					})(mns[i])
+				Promise.all(pms).then(cb)
+			},
+			"forin":function(obj,cb){
+				var key
+				for(key in obj)
+					cb(key)
+			},
+			"forinown":function(obj,cb){
+				var key
+				for(key in obj)
+					if(obj.hasOwnProperty(key))
+						cb(key)
 			}
 		}
 
