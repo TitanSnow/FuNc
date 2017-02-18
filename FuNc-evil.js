@@ -1,6 +1,7 @@
 // FuNc-evil.js
 // FuNc evaler (core part)
 // lexical analysis & code evaluation
+(function father(host,key){
 "use strict"
 
 // v is the string ready to eval, a is the "global"
@@ -81,7 +82,7 @@ function nxtfun(){
 	var tok,fun,len,arg,ifo,nv,rv,_,__
 	if(!stack.length){
 		tok=nxttok()				// get token
-		ifo=get_lookup(a)(module.exports,tok)	// get the obj info
+		ifo=get_lookup(a)(host[key],tok)	// get the obj info
 		fun=ifo.func
 		len=ifo.len
 		arg=[]
@@ -156,7 +157,7 @@ function evil(pv,pa){
 }
 
 // use get/set to control users not to break things
-module.exports=new class{
+host[key]=new class{
 	get EvilError(){
 		return EvilError
 	}
@@ -208,4 +209,10 @@ module.exports=new class{
 	get stack(){
 		return stack
 	}
+	clone(){
+		var obj={}
+		father(obj,"exports")
+		return obj.exports
+	}
 }
+})(module,"exports")

@@ -186,6 +186,7 @@ process.umask = function() { return 0; };
 // FuNc-evil.js
 // FuNc evaler (core part)
 // lexical analysis & code evaluation
+(function father(host,key){
 "use strict"
 
 // v is the string ready to eval, a is the "global"
@@ -266,7 +267,7 @@ function nxtfun(){
 	var tok,fun,len,arg,ifo,nv,rv,_,__
 	if(!stack.length){
 		tok=nxttok()				// get token
-		ifo=get_lookup(a)(module.exports,tok)	// get the obj info
+		ifo=get_lookup(a)(host[key],tok)	// get the obj info
 		fun=ifo.func
 		len=ifo.len
 		arg=[]
@@ -341,7 +342,7 @@ function evil(pv,pa){
 }
 
 // use get/set to control users not to break things
-module.exports=new class{
+host[key]=new class{
 	get EvilError(){
 		return EvilError
 	}
@@ -393,10 +394,16 @@ module.exports=new class{
 	get stack(){
 		return stack
 	}
+	clone(){
+		var obj={}
+		father(obj,"exports")
+		return obj.exports
+	}
 }
+})(module,"exports")
 
 },{}],4:[function(require,module,exports){
-(function (process){
+(function (process,global){
 // FuNc-rt.js
 // FuNc runtime
 // runtime implement name-lookup and
@@ -551,7 +558,7 @@ module.exports={
 				return eval("'"+v.substring(li,i-1).replace(/\r\n|\r|\n/g,"\\n")+"'")
 			},
 			len:function(x){
-				return x.length
+				return x.FuNcLen?x.FuNcLen():x.length
 			},
 			trim:function(x){
 				return x.trim()
@@ -753,14 +760,14 @@ module.exports={
 				}
 				func.toString=function(){
 					var len=args.length
-					var rst="func @[ "
+					var rst="func ( "
 					var i
 					for(i=0;i<len;++i)
 						if(typeof(args[i])=="string")
 							rst+="'"+args[i]+(i!=len-1?"', ":(len==1?"'; ":"' "))
 						else
 							rst+=args[i]+(i!=len-1?" , ":(len==1?" ; ":" "))
-					return rst+(len!=0?"] ":";; ] ")+body
+					return rst+(len!=0?") ":";; ) ")+body
 				}
 				return func
 			},
@@ -787,7 +794,15 @@ module.exports={
 					func(rg[i])
 			},
 			".":function(key){
-				if(typeof(a._[key])=="function"&&a._[key]!==void(0)) return a._[key].bind(a._)
+				if(typeof(a._[key])=="function"&&a._[key]!==void(0)){
+					var _=a._
+					var rv=_[key].bind(_)
+					var f=_[key]
+					rv.FuNcLen=function(){
+						return f.FuNcLen?f.FuNcLen():f.length
+					}
+					return rv
+				}
 				return a._[key]
 			},
 			".`":function(){
@@ -840,6 +855,47 @@ module.exports={
 			},
 			"apply":function(fun,args){
 				return fun.apply(null,args)
+			},
+			"import":function(mn,cb){
+				var premods={
+					"cnw":"( local `root ~root = [ if (global == `global) [ window ] [ global ] ] ~setTimeout = func( `cb, `tm ) [ apply(root.`setTimeout)( ~cb,tm) ] ~setInterval = func( `cb, `tm ) [ apply(root.`setInterval)( ~cb,tm) ] )"
+				}
+				if(premods.hasOwnProperty(mn)){
+					var sa={rt:module.exports,global:global,window:window}
+					exp.clone().evil(premods[mn],sa)
+					a[mn]=sa
+					setTimeout(cb,0)
+					return
+				}
+				var url
+				if(/\.func$/.test(mn))
+					url=mn
+				else
+					url=mn+".func"
+				mn=/\/?([^\/]+?)(?:\.func)?$/.exec(url)[1]
+				if(!process.browser){
+					require("fs").readFile(url,function(err,data){
+						if(err) throw err
+						var sa={rt:module.exports,global:global}
+						exp.clone().evil(data.toString(),sa)
+						a[mn]=sa
+						cb()
+					})
+				}else{
+					var xhr=new XMLHttpRequest()
+					xhr.open("GET",url,true)
+					xhr.responseType="text"
+					xhr.onload=function(){
+						var sa={rt:module.exports,window:window}
+						exp.clone().evil(xhr.responseText,sa)
+						a[mn]=sa
+						cb()
+					}
+					xhr.onerror=function(e){
+						throw e
+					}
+					xhr.send()
+				}
 			}
 		}
 
@@ -881,8 +937,8 @@ module.exports={
 	}
 }
 
-}).call(this,require('_process'))
-},{"_process":2}],5:[function(require,module,exports){
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"_process":2,"fs":1}],5:[function(require,module,exports){
 (function (process){
 "use strict"
 var ev=require("../FuNc-evil.js")
