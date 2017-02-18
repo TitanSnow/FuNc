@@ -858,7 +858,7 @@ module.exports={
 			},
 			"import":function(mn,cb){
 				var premods={
-					"cnw":"( local `root ~root = [ if (global == `global) [ window ] [ global ] ] ~setTimeout = func( `cb, `tm ) [ apply(root.`setTimeout)( ~cb,tm) ] ~setInterval = func( `cb, `tm ) [ apply(root.`setInterval)( ~cb,tm) ] )"
+					"cnw":"( local `root ~root = [ if (global == `global) [ window ] [ global ] ] ~setTimeout = func( `cb, `tm ) [ apply(root.`setTimeout)( ~cb,tm) ] ~setInterval = func( `cb, `tm ) [ apply(root.`setInterval)( ~cb,tm) ] ~clearTimeout = func( `id; ) [ apply(root.`clearTimeout)(id;) ] ~clearInterval = func( `id; ) [ apply(root.`clearInterval)(id;) ] )"
 				}
 				if(premods.hasOwnProperty(mn)){
 					var sa={rt:module.exports,global:global,window:window}
